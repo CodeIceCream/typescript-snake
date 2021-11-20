@@ -18,7 +18,7 @@
 
 #### 使用说明
 
-1.  xxxx
+1.  mpm run build  打包编译项目
 2.  xxxx
 3.  xxxx
 
