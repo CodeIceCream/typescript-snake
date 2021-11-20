@@ -4,6 +4,7 @@
 学习TypeScript的贪吃蛇小案例
 用到了less
 主要学习Typescript的面向对象,练习class
+使用webpack打包
 
 #### 软件架构
 软件架构说明
