@@ -18,7 +18,7 @@
 
 #### 使用说明
 
-1.  xxxx
+1.  npm run build 编译
 2.  xxxx
 3.  xxxx
 
