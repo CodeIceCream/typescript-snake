@@ -19,7 +19,7 @@
 #### 使用说明
 
 1.  npm run start 运行
-2.  mpm run build 打包编译项目
+2.  npm run build 打包编译项目
 3.  xxxx
 
 #### 参与贡献
