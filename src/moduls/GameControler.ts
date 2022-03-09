@@ -22,6 +22,7 @@ class GameControler {
 
     this.init();
   }
+
   // 游戏初始化方法 调用后游戏开始
   init() {
     // 绑定键盘事件
@@ -35,6 +36,9 @@ class GameControler {
    * @param evt 
    */
   keydownHandle(evt: KeyboardEvent) {
+    if (evt.key === this.direction) {
+      return
+    }
     this.direction = evt.key
     console.log(this)
 
@@ -48,10 +52,8 @@ class GameControler {
    * 向右 left 增加
    */
   move() {
-    
     let x = this.snake.X
     let y = this.snake.Y
-
     // 读取方向属性, 移动一格
     switch (this.direction) {
     case 'ArrowUp':
@@ -72,13 +74,37 @@ class GameControler {
       x += 10
       break;
     }
-
-    // 将计算好的局部变量赋值给对象上的属性
-    this.snake.X = x
-    this.snake.Y = y
-
+    // 移动前检查是否吃到食物
+    this.checkEat(x, y)
+    try {
+      // 将计算好的局部变量赋值给对象上的属性  设置后会触发Snake类的set语句
+      this.snake.X = x
+      this.snake.Y = y
+    } catch (error) {
+      // 捕获的异常 即此时超出合理范围
+      alert((error as Error).message + 'Game Over!')
+      // 设置蛇的生命状态
+      this.isLive = false
+    }
     //活着的蛇开启一个定时器让蛇一直向保存的方向移动 注意定时器的默认this是window
     this.isLive && setTimeout(this.move.bind(this), 300 - (this.scorePanel.level - 1) * 30)
+  }
+
+  /**
+   * 检查是否吃到食物
+   * @param X 蛇头横坐标
+   * @param Y 蛇头纵坐标
+   */
+  checkEat(X: number, Y: number) {
+    if (X === this.food.X && Y === this.food.Y) {
+      console.log('吃到食物');
+        // 食物位置重置
+        this.food.change();
+        // 面板加分
+        this.scorePanel.addScore();
+        // 身体变长
+        this.snake.addBody();
+    }
   }
 }
 
