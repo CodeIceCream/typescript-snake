@@ -5,24 +5,27 @@ class Snake {
     bodies: HTMLCollection;
     //蛇的容器
     snack: HTMLElement;
+    // 记录蛇的状态
+    isLive: boolean;
 
     constructor() {
         this.snack = document.getElementById('snake')!
         this.head = document.querySelector('#snake > div')!;
         this.bodies = this.snack.getElementsByTagName('div')
+        this.isLive = true;
     }
 
     // 获取蛇头坐标
-    get X(){
+    get X() {
         return this.head.offsetLeft;
     }
 
-    get Y(){
-    return this.head.offsetTop;
+    get Y() {
+        return this.head.offsetTop;
     }
 
     // 设置蛇头的坐标  setter的用法：当设置该X值时调用set语句体内方法
-    set X(value:number){
+    set X(value: number) {
         if (this.X === value) {
             return
         }
@@ -33,9 +36,11 @@ class Snake {
         // 先移动身体,从后往前赋值避免丢失原有位置
         this.moveBody()
         this.head.style.left = value + 'px';
+        // 移动前检查是否吃到自己
+        this.checkSuicide()
     }
 
-    set Y(value:number){
+    set Y(value: number) {
         if (this.Y === value) {
             return
         }
@@ -46,6 +51,7 @@ class Snake {
         // 先移动身体,从后往前赋值避免丢失原有位置
         this.moveBody()
         this.head.style.top = value + 'px'
+        this.checkSuicide()
     }
 
     // 蛇增加长度
@@ -61,14 +67,28 @@ class Snake {
      */
     moveBody() {
         // 遍历蛇身像素点 从最大索引开始
-        for(let i=this.bodies.length-1; i>0; i--) {
+        for (let i = this.bodies.length - 1; i > 0; i--) {
             // 获取上前面身体的位置
-            let X = (this.bodies[i-1] as HTMLElement).offsetLeft;
-            let Y = (this.bodies[i-1] as HTMLElement).offsetTop;
+            let X = (this.bodies[i - 1] as HTMLElement).offsetLeft;
+            let Y = (this.bodies[i - 1] as HTMLElement).offsetTop;
             (this.bodies[i] as HTMLElement).style.left = X + 'px';
             (this.bodies[i] as HTMLElement).style.top = Y + 'px';
         }
     }
+
+    /** 蛇头撞到蛇身检查 
+     * 第四个以上的身体才可能被撞到
+    */
+    checkSuicide() {
+        for (let i = 3; i < this.bodies.length; i++) {
+            const body = this.bodies[i] as HTMLElement;
+            if (this.X === body.offsetLeft && this.Y === body.offsetTop) {
+                // 吃到自己
+                throw new Error("吃到自己啦~~~");
+            }
+        }
+    }
+
 }
 
 export default Snake;

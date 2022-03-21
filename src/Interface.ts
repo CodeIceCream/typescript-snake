@@ -12,7 +12,3 @@ export enum ieDirection {
   up = 'Up',
   down = 'Down',
 }
-
-export interface Direction {
-  
-}

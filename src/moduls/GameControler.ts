@@ -13,14 +13,12 @@ class GameControler {
   // 记分牌
   scorePanel: ScorePanel;
   // 存储一个蛇的前进方向
-  direction: string = ''
-  // 记录蛇的状态
-  isLive: boolean = true
+  direction: string = chromeDirection.right || ieDirection.right
 
   constructor() {
     this.snake = new Snake;
     this.food = new Food;
-    this.scorePanel = new ScorePanel;
+    this.scorePanel = new ScorePanel(10, 1);
 
     this.init();
   }
@@ -45,12 +43,15 @@ class GameControler {
     if (this.snake.bodies.length > 1) {
       // 当有蛇身时，禁止同一个坐标方向的移动
       if (isHorizontal(this.direction) && isHorizontal(evt.key)
-      || isVertical(this.direction) && isVertical(evt.key)) {
+        || isVertical(this.direction) && isVertical(evt.key)) {
         return
       }
     }
-    this.direction = evt.key
-    console.log(this)
+    if (isHorizontal(evt.key) || isVertical(evt.key)) {
+      // 只能是方向键才赋方向值
+      this.direction = evt.key
+      console.log(this)
+    }
 
   }
 
@@ -66,21 +67,21 @@ class GameControler {
     let y = this.snake.Y
     // 读取方向属性, 移动一格
     switch (this.direction) {
-    case chromeDirection.up || ieDirection.up:
-      // 每次移动是一格(10px)的倍数
-      y -= 10
-      break;
-    case chromeDirection.down || ieDirection.down:
-      y += 10
-      break;
-    case chromeDirection.left || ieDirection.left:
-      x -= 10
-      break;
-    case chromeDirection.right || ieDirection.right:
-      x += 10
-      break;
-    default:
-      break;
+      case chromeDirection.up || ieDirection.up:
+        // 每次移动是一格(10px)的倍数
+        y -= 10
+        break;
+      case chromeDirection.down || ieDirection.down:
+        y += 10
+        break;
+      case chromeDirection.left || ieDirection.left:
+        x -= 10
+        break;
+      case chromeDirection.right || ieDirection.right:
+        x += 10
+        break;
+      default:
+        break;
     }
     // 移动前检查是否吃到食物
     this.checkEat(x, y)
@@ -92,10 +93,10 @@ class GameControler {
       // 捕获的异常 即此时超出合理范围
       alert((error as Error).message + 'Game Over!')
       // 设置蛇的生命状态
-      this.isLive = false
+      this.snake.isLive = false
     }
     //活着的蛇开启一个定时器让蛇一直向保存的方向移动 注意定时器的默认this是window
-    this.isLive && setTimeout(this.move.bind(this), 300 - (this.scorePanel.level - 1) * 30)
+    this.snake.isLive && setTimeout(this.move.bind(this), 300 - (this.scorePanel.level - 1) * 30)
   }
 
   /**
@@ -106,12 +107,12 @@ class GameControler {
   checkEat(X: number, Y: number) {
     if (X === this.food.X && Y === this.food.Y) {
       console.log('吃到食物');
-        // 食物位置重置
-        this.food.change();
-        // 面板加分
-        this.scorePanel.addScore();
-        // 身体变长
-        this.snake.addBody();
+      // 食物位置重置
+      this.food.change();
+      // 面板加分
+      this.scorePanel.addScore();
+      // 身体变长
+      this.snake.addBody();
     }
   }
 }
