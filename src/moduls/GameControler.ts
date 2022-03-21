@@ -1,6 +1,8 @@
+import { chromeDirection, ieDirection } from "../Interface";
+import { isHorizontal, isVertical } from "../Utils/direction";
 import Food from "./Food";
-import Snake from "./Snake";
 import ScorePanel from "./ScorePanel";
+import Snake from "./Snake";
 
 // 游戏控制器 控制其他的类
 class GameControler {
@@ -36,8 +38,16 @@ class GameControler {
    * @param evt 
    */
   keydownHandle(evt: KeyboardEvent) {
+    evt.preventDefault();
     if (evt.key === this.direction) {
       return
+    }
+    if (this.snake.bodies.length > 1) {
+      // 当有蛇身时，禁止同一个坐标方向的移动
+      if (isHorizontal(this.direction) && isHorizontal(evt.key)
+      || isVertical(this.direction) && isVertical(evt.key)) {
+        return
+      }
     }
     this.direction = evt.key
     console.log(this)
@@ -56,22 +66,20 @@ class GameControler {
     let y = this.snake.Y
     // 读取方向属性, 移动一格
     switch (this.direction) {
-    case 'ArrowUp':
-    case 'Up':
+    case chromeDirection.up || ieDirection.up:
       // 每次移动是一格(10px)的倍数
       y -= 10
       break;
-    case 'ArrowDown':
-    case 'Down':
+    case chromeDirection.down || ieDirection.down:
       y += 10
       break;
-    case 'ArrowLeft':
-    case 'Left':
-      x -=10
+    case chromeDirection.left || ieDirection.left:
+      x -= 10
       break;
-    case 'ArrowRight':
-    case 'Right':
+    case chromeDirection.right || ieDirection.right:
       x += 10
+      break;
+    default:
       break;
     }
     // 移动前检查是否吃到食物
