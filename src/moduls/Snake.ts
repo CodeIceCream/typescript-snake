@@ -4,14 +4,14 @@ class Snake {
     // 蛇的身体（包括蛇头）
     bodies: HTMLCollection;
     //蛇的容器
-    snack: HTMLElement;
+    snake: HTMLElement;
     // 记录蛇的状态
     isLive: boolean;
 
     constructor() {
-        this.snack = document.getElementById('snake')!
+        this.snake = document.getElementById('snake')!
         this.head = document.querySelector('#snake > div')!;
-        this.bodies = this.snack.getElementsByTagName('div')
+        this.bodies = this.snake.getElementsByTagName('div')
         this.isLive = true;
     }
 
@@ -58,7 +58,7 @@ class Snake {
     addBody() {
         const div = document.createElement('div')
         // 向element中添加一个div
-        this.snack.insertAdjacentElement('beforeend', div)
+        this.snake.insertAdjacentElement('beforeend', div)
     }
 
     /**
